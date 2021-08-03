@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html {
+            font-family: 'Roboto', Helvetica, Arial, sans-serif;
+            color: #2c3e50;
+        }
+        .tablesetting{
+            max-width: 500px;
+            margin: 0 auto;
+            border: solid red;
+            border-radius: 0.75rem;
+            padding-top: 0.5rem;
+        }
+
+        legend{
+            font-weight: bold;
+        }
+
+        form {
+            padding-top: 0.25rem;
+            padding-bottom: 1rem;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            /* border-bottom: dashed red; */
+        }
+
+        div{
+            border-bottom: dashed #dfe6e9;
+            padding-top: 1rem;
+            /* padding-bottom: 0.5rem; */
+        }
+
+        p{
+            font-size: 10px;
+            color: #b2bec3;
+        }
+
+    </style>
+</head>
+<body>
+    <fieldset class="tablesetting">
+        <legend>
+            Form Check
+        </legend>    
+        <form>
+            <div>
+                <label for="">姓名:</label>
+                <input type="text" id="idName">
+                <span id="idNametest"></span>
+                <p>(1.不可空白 2.至少兩個字以上 3.必須全部為中文字)</p>
+            </div>
+            <div>
+                <label for="">密碼:</label>
+                <input type="password" id='idPwd' >
+                <span id="idPwdtest"></span>
+                <p>(1.不可空白 2.至少6個字且必須包含英數字,特殊字元[!@#$%^&*])</p>
+            </div>
+            <div>
+                <label for="">日期:</label>
+                <input type="text" id="idDate">
+                <span id="idDatetest"></span>
+                <p>格式:西元年/月/日(yyyy/mm/dd)</p>
+            </div>
+        </form>
+    </fieldset>
+    
+    <script>
+        document.getElementById("idName").addEventListener("blur",checkName);
+        function checkName(){
+            let theNameObj=document.getElementById("idName");
+            let theNameObjVal=theNameObj.value;
+            let theNameObjValLen=theNameObjVal.length;
+            let theNametest=document.getElementById("idNametest");
+            let flag1=false;
+                if(theNameObjVal==""){
+                    theNametest.innerHTML="<img src='Images/remove1.png'>不可空白"
+                }else if(theNameObjValLen>=2){
+                    for(let i=0;i<theNameObjValLen;i++){
+                        let ch=theNameObjVal.charCodeAt(i);
+                        console.log("ch= "+ch)
+                        if(ch>=0x4E00 && ch<=0x9FFF)
+                            flag1=true;
+                        if(flag1) break;
+                    }
+                    if(flag1){
+                        theNametest.innerHTML="<img src='Images/check1.png'>正確";}
+                    else{
+                        theNametest.innerHTML="<img src='Images/remove1.png'>姓名必須全部為中文";}
+                }else{
+                    theNametest.innerHTML="<img src='Images/remove1.png'>至少兩個字以上";
+                }
+        }
+
+
+        document.getElementById("idPwd").addEventListener("blur",checkPwd);
+        function checkPwd(){
+            let thePwdObj=document.getElementById("idPwd");
+            let thePwdObjVal=thePwdObj.value;
+            let thePwdObjValLen=thePwdObjVal.length;
+            let thePwdtest=document.getElementById("idPwdtest");
+            let flag1=false,flag2=false,flag3=false;
+                if(thePwdObjVal==""){
+                    thePwdtest.innerHTML="<img src='Images/remove1.png'>不可空白";
+                }else if(thePwdObjValLen>=6){
+                    for(let i=0;i<thePwdObjValLen;i++){
+                        let ch=thePwdObjVal.charAt(i).toUpperCase();
+                        if(ch>="A" && ch<="Z")
+                            flag1=true;
+                        else if(ch>="0" && ch<="9")
+                            flag2=true;
+                        else if(ch="[" || "!" || "@" || "#" || "$" || "%" || "^" || "&" || "*" || "\"" || "]")
+                            flag3=true;
+                        if(flag1 && flag2 && flag3)  break;   
+                    }
+                    if(flag1 && flag2 && flag3) 
+                        thePwdtest.innerHTML="<img src='Images/check1.png'>正確";
+                    else
+                        thePwdtest.innerHTML="<img src='Images/remove1.png'>至少6個字且必須包含英數字,特殊字元[!@#$%^&*]";
+                }else{
+                    thePwdtest.innerHTML="<img src='Images/remove1.png'>至少6個字";
+                }
+        }
+
+        document.getElementById("idDate").addEventListener("blur",checkDate);
+        function checkDate(){
+            let theDateObj=document.getElementById("idDate");
+            let theDateObjVal=theDateObj.value;
+            // console.log("theDateObjVal="+theDateObjVal);
+            let inputDate=new Date(theDateObjVal);
+            // console.log("inputDate="+inputDate);
+            let theDatetest=document.getElementById("idDatetest");
+            let DateYear=inputDate.getFullYear();
+            let DateMon=inputDate.getMonth()+1;
+            let DateDay=inputDate.getDate();
+            let RealDay=`${DateYear}/${DateMon}/${DateDay}`;
+            console.log("theDateObjVal="+theDateObjVal);
+            console.log("RealDay="+RealDay);
+            if(RealDay!=theDateObjVal)
+                theDatetest.innerHTML="<img src='Images/remove1.png'>無此日期";
+            else
+                theDatetest.innerHTML="";
+        }
+    </script>
+
+</body>
+</html>
